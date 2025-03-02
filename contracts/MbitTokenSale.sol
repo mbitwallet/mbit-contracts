@@ -25,7 +25,8 @@ contract MbitTokenSale is IMbitTokenSale, ReentrancyGuard {
     mapping(uint256 batchId => mapping(address paymentToken => uint256)) public batchPrice; // wei per token
     mapping(uint256 batchId => BatchStatus) public batchStatus;
 
-    mapping(uint256 batchId => uint256) soldAmount;
+    mapping(uint256 batchId => uint256) public soldAmountOfBatch;
+    uint256 public soldAmount;
     mapping(uint256 batchId => mapping(address user => uint256)) public userAmountOfBatch;
     mapping(address user => uint256) public userAmount;
     EnumerableSet.AddressSet private _users;
@@ -64,10 +65,11 @@ contract MbitTokenSale is IMbitTokenSale, ReentrancyGuard {
         uint256 price = batchPrice[batchId][paymentToken];
         require(price > 0, 'Invalid payment');
         uint256 receiveAmount = (paymentAmount * 10 ** IMbitToken(saleToken).decimals()) / price;
-        require(soldAmount[batchId] + receiveAmount <= batch.hardCap, 'Hard cap reached');
+        require(soldAmountOfBatch[batchId] + receiveAmount <= batch.hardCap, 'Hard cap reached');
 
         _users.add(msg.sender);
-        soldAmount[batchId] += receiveAmount;
+        soldAmount += receiveAmount;
+        soldAmountOfBatch[batchId] += receiveAmount;
         userAmountOfBatch[batchId][msg.sender] += receiveAmount;
         userAmount[msg.sender] += receiveAmount;
 
