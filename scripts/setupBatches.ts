@@ -29,9 +29,7 @@ async function main() {
         cliff: OneMonth * BigInt(2),
         duration: OneMonth * BigInt(35),
       },
-      batchPrice: BigInt('80000'), // 0.08 USDT
-      paymentAmount: toWei(8, 6), // 8 USDT
-      receiveAmount: toWei(100),
+      batchPrice: toWei(8, 16), // 0.08 USDT
     },
     {
       batchId: BigInt(2),
@@ -49,9 +47,7 @@ async function main() {
         cliff: OneMonth * BigInt(2),
         duration: OneMonth * BigInt(35),
       },
-      batchPrice: BigInt('100000'), // 0.1 USDT
-      paymentAmount: toWei(10, 6), // 10 USDT
-      receiveAmount: toWei(100),
+      batchPrice: toWei(1, 17), // 0.1 USDT
     },
     {
       batchId: BigInt(3),
@@ -69,14 +65,12 @@ async function main() {
         cliff: OneMonth * BigInt(2),
         duration: OneMonth * BigInt(17),
       },
-      batchPrice: BigInt('200000'), // 0.2 USDT
-      paymentAmount: toWei(20, 6), // 20 USDT
-      receiveAmount: toWei(100),
+      batchPrice: toWei(2, 17), // 0.2 USDT
     },
   ]
 
   for (let i = 0; i < batches.length; i++) {
-    const { batchId, batch, batchVestingPlan, batchStatus, batchPrice, paymentAmount, receiveAmount } = batches[i]
+    const { batchId, batch, batchVestingPlan, batchStatus, batchPrice } = batches[i]
 
     const setBatch = await mbitTokenSale.setBatch(batchId, batch)
     console.log('setBatch start:', setBatch.hash)
@@ -85,21 +79,17 @@ async function main() {
 
     const setBatchVestingPlan = await mbitTokenSale.setBatchVestingPlan(batchId, batchVestingPlan)
     console.log('setBatchVestingPlan start:', setBatchVestingPlan.hash)
-    await setBatch.wait()
+    await setBatchVestingPlan.wait()
     console.log('setBatchVestingPlan confirmed:', setBatchVestingPlan.hash)
 
     const setBatchStatus = await mbitTokenSale.setBatchStatus(batchId, batchStatus)
     console.log('setBatchStatus start:', setBatchStatus.hash)
-    await setBatch.wait()
+    await setBatchStatus.wait()
     console.log('setBatchStatus confirmed:', setBatchStatus.hash)
 
-    const setBatchPrice = await mbitTokenSale.setBatchPrice(
-      batchId,
-      usdtAddress,
-      batchPrice,
-    )
+    const setBatchPrice = await mbitTokenSale.setBatchPrice(batchId, usdtAddress, batchPrice)
     console.log('setBatchPrice start:', setBatchPrice.hash)
-    await setBatch.wait()
+    await setBatchPrice.wait()
     console.log('setBatchPrice confirmed:', setBatchPrice.hash)
   }
 }
