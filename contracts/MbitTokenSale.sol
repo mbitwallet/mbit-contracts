@@ -66,6 +66,7 @@ contract MbitTokenSale is IMbitTokenSale, ReentrancyGuard {
         require(price > 0, 'Invalid payment');
         uint256 receiveAmount = (paymentAmount * 10 ** IMbitToken(saleToken).decimals()) / price;
         require(soldAmountOfBatch[batchId] + receiveAmount <= batch.hardCap, 'Hard cap reached');
+        require(recipient != address(0), 'Recipient is zero address');
 
         _users.add(msg.sender);
         soldAmount += receiveAmount;
@@ -76,6 +77,7 @@ contract MbitTokenSale is IMbitTokenSale, ReentrancyGuard {
         // Collect fund
         uint256 refundValue = msg.value;
         if (paymentToken != bnb) {
+            require(msg.value == 0, 'Value should be 0');
             IERC20(paymentToken).safeTransferFrom(msg.sender, recipient, paymentAmount);
         } else {
             require(msg.value >= paymentAmount, 'Insuffient payment');
@@ -121,6 +123,8 @@ contract MbitTokenSale is IMbitTokenSale, ReentrancyGuard {
     }
 
     function withdraw(address token, address _recipient, uint256 amount) external onlyGovernance {
+        require(token != address(0), 'Token is zero address');
+        require(_recipient != address(0), 'Recipient is zero address');
         if (token == bnb) {
             (bool success, ) = address(_recipient).call{value: amount}(new bytes(0));
             require(success, 'Insufficient bnb');
