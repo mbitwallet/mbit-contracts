@@ -7,8 +7,8 @@ function toWei(amount: string | number | bigint, decimals = 18) {
 }
 
 async function main() {
-  const mbitTokenSaleContractAddress = '0x7D2C665A99BBA070DB67d87Ef148A6E7B3f860FA'
-  const usdtAddress = '0xf3b0F2e5189fD6a4a85462072604151a1571c1E1'
+  const mbitTokenSaleContractAddress = process.env.TOKEN_SALE_ADDRESS || ''
+  const usdtAddress = process.env.USDT_ADDRESS || ''
 
   const mbitTokenSale = await ethers.getContractAt('MbitTokenSale', mbitTokenSaleContractAddress)
 
@@ -18,12 +18,12 @@ async function main() {
       batchStatus: BigInt(1),
       batch: {
         hardCap: toWei(9509959),
-        start: BigInt('1740910556'),
+        start: BigInt('1741485600'),
         end: BigInt(0),
       },
       batchVestingPlan: {
         percentageDecimals: BigInt(0),
-        tge: BigInt('1740996956'),
+        tge: BigInt('1748744280'),
         tgePercentage: BigInt(7),
         basis: OneMonth,
         cliff: OneMonth * BigInt(2),
@@ -36,12 +36,12 @@ async function main() {
       batchStatus: BigInt(1),
       batch: {
         hardCap: toWei(15849932),
-        start: BigInt('1740910556'),
+        start: BigInt('1741485600'),
         end: BigInt(0),
       },
       batchVestingPlan: {
         percentageDecimals: BigInt(0),
-        tge: BigInt('1740996956'),
+        tge: BigInt('1748744280'),
         tgePercentage: BigInt(8),
         basis: OneMonth,
         cliff: OneMonth * BigInt(2),
@@ -54,12 +54,12 @@ async function main() {
       batchStatus: BigInt(1),
       batch: {
         hardCap: toWei(15849932),
-        start: BigInt('1740910556'),
+        start: BigInt('1741485600'),
         end: BigInt(0),
       },
       batchVestingPlan: {
         percentageDecimals: BigInt(0),
-        tge: BigInt('1740996956'),
+        tge: BigInt('1748744280'),
         tgePercentage: BigInt(10),
         basis: OneMonth,
         cliff: OneMonth * BigInt(2),
